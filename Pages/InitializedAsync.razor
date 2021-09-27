@@ -1,0 +1,42 @@
+﻿@page "/InitializedAsync"
+<EditForm Model="FormModel">
+    <DataAnnotationsValidator />
+
+    <BlazoredTypeahead SearchMethod="GetPeople"
+                       @bind-Value="FormModel.SelectedPerson"
+                       EnableDropDown="true"
+                       MinimumLength="3"
+                       placeholder="Search by first name...">
+        <SelectedTemplate Context="person">
+            @person.Firstname
+        </SelectedTemplate>
+        <HelpTemplate>
+            Please enter at least 3 character to perform a search.
+        </HelpTemplate>
+        <ResultTemplate Context="person">
+            @person.Firstname @person.Lastname
+        </ResultTemplate>
+    </BlazoredTypeahead>
+    <ValidationMessage For="@(() => FormModel.SelectedPerson)" />
+
+    <button class="btn btn-primary" type="submit" style="margin-top: 20px;">Submit</button>
+</EditForm>
+
+@code {
+
+    private FormExample FormModel = new FormExample();
+
+    public async Task<IEnumerable<Person>> GetPeople(string term)
+    {
+        return Enumerable.Empty<Person>();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        await Task.Delay(100);
+
+        FormModel.SelectedPerson = new Person { Firstname = "John", Lastname = "Doe" };
+    }
+}
